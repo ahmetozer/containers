@@ -40,4 +40,4 @@ FROM gcr.io/distroless/base-debian11
 COPY --from=nginxbin /opt /
 LABEL org.opencontainers.image.source="https://github.com/ahmetozer/containers"
 LABEL org.opencontainers.image.authors="Ahmet OZER"
-ENTRYPOINT [ "/usr/sbin/nginx" ]
+ENTRYPOINT [ "/usr/sbin/nginx" "-g 'daemon off;'" ]
