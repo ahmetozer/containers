@@ -15,7 +15,7 @@ to show gui on X server.
 
 ```bash
 docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix\
- --cap-add ipc_lock --name vscode ghcr.io/ahmetozer/containers:vscode-container
+ --cap-add ipc_lock --name vscode ghcr.io/ahmetozer/containers:vscode
 ```
 
 > To store project data permanently,  share your local folder with the container and open that folder in vscode to continue work.
@@ -23,7 +23,7 @@ docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix\
 ```bash
 docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix\
  --cap-add ipc_lock -v /home/ahmet/project/hello:/project/hello \
- ghcr.io/ahmetozer/containers:vscode-container
+ ghcr.io/ahmetozer/containers:vscode
 ```
 
 If you want to keep your vscode configurations and plugins, you can
@@ -33,7 +33,7 @@ add another volume to `/home/vscode` to save changes.
 docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix\
  --cap-add ipc_lock -v /home/ahmet/project/hello:/project/hello \
  -v /home/ahmet/project/vscode-data:/home/vscode \
- ghcr.io/ahmetozer/containers:vscode-container
+ ghcr.io/ahmetozer/containers:vscode
 ```
 
 ## Install packages inside container
@@ -45,7 +45,7 @@ with docker to keep secure your environment.
 docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix\
  --cap-add ipc_lock -v /home/ahmet/project/hello:/project/hello \
  --name vscode -v /home/ahmet/project/vscode-data:/home/vscode \
- ghcr.io/ahmetozer/containers:vscode-container
+ ghcr.io/ahmetozer/containers:vscode
 ```
 
 ```bash
