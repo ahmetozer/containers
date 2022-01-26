@@ -1,6 +1,6 @@
 # Distroless Nginx
 
-This container image is created for run nginx minimal nginx without any
+This container image is created for run minimal nginx without any
 distro.
 
 The system based on Debian 11 and Nginx 1.20
