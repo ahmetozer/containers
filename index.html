@@ -19,7 +19,7 @@
 
     </div>
     <div class="d-flex gap-5 justify-content-center" id="dropdownFilter">
-        
+
 
         <div class="dropdown-menu dropdown-menu-dark border-0 pt-0 mx-0 rounded-3 shadow overflow-hidden"
             style="width: 400px;">
@@ -62,12 +62,23 @@
             };
             xhr.send();
         };
+        function createList() {
+            let listHtml = ''
 
+            for (let x in containerList.tree) {
+                if (containerList.tree[x].type = 'tree' && containerList.tree[x].path.startsWith("cont/") && containerList.tree[x].path.split("/").length == 2 && containerList.tree[x].path != "cont/index.html") {
+                    listHtml += '<li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="/' + containerList.tree[x].path + '"><span class="d-inline-block bg-light rounded-circle" style="width: .5em; height: .5em;"></span>' + containerList.tree[x].path.split("/")[1] + '</a></li>'
+                }
+                //containerList.tree[x] + "<br>";
+            }
+            list.innerHTML = listHtml
+        }
         let containerList = JSON.parse(window.localStorage.getItem('containerList'));
         let containerListEpoc = JSON.parse(window.localStorage.getItem('containerListEpoc'));
         let epoc = Math.round(Date.now() / 1000)
         if (containerList !== null && (containerListEpoc + 300) > epoc) {
             input.placeholder = "Type to filter..."
+            createList()
         } else {
             getJSON('https://api.github.com/repos/ahmetozer/containers/git/trees/master?recursive=0',
                 function (err, data) {
@@ -79,18 +90,11 @@
                         window.localStorage.setItem('containerListEpoc', Math.round(Date.now() / 1000))
                         containerList = data
                     }
+                    createList()
                 });
         }
 
-        let listHtml =''
-        
-        for (let x in containerList.tree) {
-            if (containerList.tree[x].type = 'tree' && containerList.tree[x].path.startsWith("cont/") && containerList.tree[x].path.split("/").length == 2 && containerList.tree[x].path != "cont/index.html"){
-                listHtml += '<li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="/'+containerList.tree[x].path+'"><span class="d-inline-block bg-light rounded-circle" style="width: .5em; height: .5em;"></span>'+containerList.tree[x].path.split("/")[1]+'</a></li>'
-            }
-            //containerList.tree[x] + "<br>";
-        }
-        list.innerHTML =listHtml
+
 
     </script>
 
@@ -100,7 +104,6 @@
 
 
     <style>
-
         .dropdown-menu {
             position: static;
             display: block;
@@ -112,7 +115,6 @@
             background-color: rgba(255, 255, 255, .05);
             border-color: rgba(255, 255, 255, .15);
         }
-
     </style>
 
 </body>
