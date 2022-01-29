@@ -6,5 +6,5 @@ distro.
 The system based on Debian 11 and Nginx 1.20
 
 ```bash
-docker run -it --rm ghcr.io/ahmetozer/containers:distroless-nginx
+docker run -it --rm ghcr.io/ahmetozer/containers:nginx
 ```
