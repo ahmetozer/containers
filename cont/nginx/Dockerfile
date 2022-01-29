@@ -6,6 +6,8 @@ FROM nginx:1.20 as nginxbin
 
 ARG TIME_ZONE
 
+RUN apt update && apt install -y libcap2-bin
+RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/sbin/nginx
 RUN mkdir -p /opt/var/cache/nginx && \
 if [ -d "/lib/aarch64-linux-gnu/" ]; then \
     export LINUX_GNU="aarch64-linux-gnu" ; \
@@ -32,7 +34,9 @@ cp -a --parents /lib/$LINUX_GNU/libpthread* /opt && \
 cp -a --parents /lib/$LINUX_GNU/libcrypt* /opt && \
 cp -a --parents /usr/lib/$LINUX_GNU/libssl.so.* /opt && \
 cp -a --parents /usr/lib/$LINUX_GNU/libcrypto.so.* /opt && \
-cp /usr/share/zoneinfo/${TIME_ZONE:-ROC} /opt/etc/localtime
+cp /usr/share/zoneinfo/${TIME_ZONE:-ROC} /opt/etc/localtime && \
+mkdir -p /opt/var/cache/nginx && chown -R nginx:nginx /opt/var/cache/nginx && \
+chown -R nginx:nginx /opt/var/run && chown -R nginx:nginx /opt/var/log/nginx
 
 
 FROM gcr.io/distroless/base-debian11
@@ -40,4 +44,5 @@ FROM gcr.io/distroless/base-debian11
 COPY --from=nginxbin /opt /
 LABEL org.opencontainers.image.source="https://github.com/ahmetozer/containers"
 LABEL org.opencontainers.image.authors="Ahmet OZER"
+USER nginx
 ENTRYPOINT [ "/usr/sbin/nginx", "-g", "daemon off;" ]

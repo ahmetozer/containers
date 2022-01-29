@@ -1,6 +1,7 @@
 
 FROM debian:bullseye as build
-RUN apt update && apt install -y dnsmasq --no-install-recommends
+RUN apt update && apt install -y dnsmasq libcap2-bin --no-install-recommends
+RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/sbin/dnsmasq
 RUN if [ -d "/lib/aarch64-linux-gnu/" ]; then \
     export LINUX_GNU="aarch64-linux-gnu" ; \
 elif [ -d "/lib/arm-linux-gnueabihf/" ];then \
@@ -27,7 +28,7 @@ cp -a --parents /usr/lib/$LINUX_GNU/libzstd.so* /opt && \
 cp -a --parents /usr/lib/$LINUX_GNU/libgcrypt.so* /opt && \
 cp -a --parents /lib/$LINUX_GNU/libgpg-error.so* /opt && \
 cp -a --parents /usr/lib/$LINUX_GNU/liblz4.so* /opt && \
-echo 
+echo "nobody:x:65534:65534:Nobody:/:" > /opt/etc/passwd
 
 
 FROM gcr.io/distroless/base-debian11
@@ -35,4 +36,5 @@ FROM gcr.io/distroless/base-debian11
 COPY --from=build /opt /
 LABEL org.opencontainers.image.source="https://github.com/ahmetozer/containers"
 LABEL org.opencontainers.image.authors="Ahmet OZER"
+USER nobody
 ENTRYPOINT [ "/usr/sbin/dnsmasq", "-d"]

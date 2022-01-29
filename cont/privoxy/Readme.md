@@ -1,4 +1,4 @@
-# Privoxy Distroless
+# Distroless Privoxy
 
 This container image is created for run minimal nginx without any
 distro.

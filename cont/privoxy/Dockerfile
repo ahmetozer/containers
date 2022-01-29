@@ -1,5 +1,6 @@
 FROM debian:bullseye as build
-RUN apt update && apt install -y privoxy --no-install-recommends
+RUN apt update && apt install -y privoxy libcap2-bin --no-install-recommends
+RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/sbin/privoxy
 RUN if [ -d "/lib/aarch64-linux-gnu/" ]; then \
     export LINUX_GNU="aarch64-linux-gnu" ; \
 elif [ -d "/lib/arm-linux-gnueabihf/" ];then \
