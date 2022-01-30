@@ -24,6 +24,7 @@ cp -a --parents /lib/$LINUX_GNU/libcap.so.* /opt && \
 cp -a --parents /usr/lib/$LINUX_GNU/liblz4.so.* /opt && \
 cp -a --parents /usr/lib/$LINUX_GNU/libgcrypt.so.* /opt && \
 cp -a --parents /lib/$LINUX_GNU/libgpg-error.so.* /opt && \
+cp -a --parents /lib/$LINUX_GNU/libgcc_s.so.* /opt && \
 cp /usr/share/zoneinfo/${TIME_ZONE:-ROC} /opt/etc/localtime && \
 mkdir -p /opt/home/nobody && chown -R nobody /opt/home/nobody && \
 echo "nobody:x:65534:65534:Nobody:/home/nobody:" > /opt/etc/passwd
