@@ -1,5 +1,5 @@
 FROM php:fpm as phpfpmbin
-RUN docker-php-ext-install mysqli
+RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 RUN apt update && apt install -y libcap2-bin
 RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/local/sbin/php-fpm
 RUN mkdir -p /opt/var/cache/nginx && \
@@ -11,15 +11,16 @@ else  \
     export LINUX_GNU="x86_64-linux-gnu"; \
 fi; \
 cp -a --parents /usr/local/sbin/php-fpm /opt && \
+cp -a --parents /usr/local/etc/php /opt && \
 cp -a --parents /usr/local/etc/php-fpm.d /opt && \
 cp -a --parents /usr/local/etc/php-fpm.conf /opt && \
-cp -aL --parents /var/run /opt && \
+cp -a --parents /usr/local/lib/php/ /opt && \
+cp -a --parents /var/run /opt && \
 cp -a --parents /etc/passwd /opt && \
 cp -a --parents /etc/group /opt && \
 cp /usr/share/zoneinfo/${TIME_ZONE:-ROC} /opt/etc/localtime && \
 cp -a --parents /lib/${LINUX_GNU}/*.so.*  /opt && \
 cp -a --parents /usr/lib/${LINUX_GNU}/*.so.* /opt && \
-cp -a --parents /etc/group /opt && \
 echo done
 
 FROM gcr.io/distroless/base-debian11
