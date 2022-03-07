@@ -3,6 +3,7 @@
 echo "Build container images"
 echo IMAGE_ID=$IMAGE_ID
 echo VERSION=$VERSION
+echo COMMIT_SHA=${COMMIT_SHA}
 
 SHARE_BIN=$(realpath $0)
 SHARE_DIR=$(dirname $SHARE_BIN)
@@ -18,12 +19,15 @@ for d in cont/*; do
         cd $d
         if [ -f "build.sh" ]; then
             echo "custom build.sh will be used"
+            export VERSION=${VERSION}
+            export COMMIT_SHA=${COMMIT_SHA}
             chmod +x build.sh
             ./build.sh
         else
             echo "generic build.sh will be used"
             docker buildx build --push \
                 --tag ${IMAGE_ID}/${IMAGE_NAME}:${VERSION} \
+                --tag ${IMAGE_ID}/${IMAGE_NAME}:${COMMIT_SHA} \
                 --platform linux/amd64,linux/arm/v7,linux/arm64 .
         fi
         unset IMAGE_NAME
