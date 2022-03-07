@@ -3,5 +3,5 @@
 Ookla speedtest container
 
 ```bash
-docker run -it --rm ghcr.io/ahmetozer/containers:ookla-speedtest
+docker run -it --rm ghcr.io/ahmetozer/containers/ookla-speedtest
 ```

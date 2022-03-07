@@ -6,5 +6,5 @@ distro.
 The system based on Debian 11 and Distroless
 
 ```bash
-docker run -it --rm ghcr.io/ahmetozer/containers:privoxy
+docker run -it --rm ghcr.io/ahmetozer/containers/privoxy
 ```
