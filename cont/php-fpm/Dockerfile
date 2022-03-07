@@ -16,7 +16,6 @@ cp -a --parents /usr/local/etc/php-fpm.d /opt && \
 cp -a --parents /usr/local/etc/php-fpm.conf /opt && \
 cp -a --parents /usr/local/lib/php/ /opt && \
 cp -a --parents /usr/bin/msmtp /opt && \
-cp -a --parents /var/run /opt && \
 cp -a --parents /etc/passwd /opt && \
 cp -a --parents /etc/group /opt && \
 cp /usr/share/zoneinfo/${TIME_ZONE:-ROC} /opt/etc/localtime && \
