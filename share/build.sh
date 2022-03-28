@@ -15,7 +15,7 @@ WORK_DIR=$PWD
 for d in cont/*; do
     if [[ ! -L "${d%/}" ]]; then
         export IMAGE_NAME=$(basename $d)
-        echo "${IMAGE_ID}/${IMAGE_NAME}"
+        echo "      ${IMAGE_ID}/${IMAGE_NAME}"
         cd $d
         if [ -f "build.sh" ]; then
             echo "custom build.sh will be used"
@@ -26,8 +26,8 @@ for d in cont/*; do
         else
             echo "generic build.sh will be used"
             docker buildx build --push \
-                --tag ${IMAGE_ID}/${IMAGE_NAME}:${VERSION} \
                 --tag ${IMAGE_ID}/${IMAGE_NAME}:${COMMIT_SHA} \
+                --tag ${IMAGE_ID}/${IMAGE_NAME}:${VERSION} \
                 --platform linux/amd64,linux/arm/v7,linux/arm64 .
         fi
         unset IMAGE_NAME
