@@ -1,28 +1,18 @@
 FROM debian:bullseye as build
 RUN apt update && apt install -y privoxy libcap2-bin --no-install-recommends
-RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/sbin/privoxy
-RUN if [ -d "/lib/aarch64-linux-gnu/" ]; then \
-    export LINUX_GNU="aarch64-linux-gnu" ; \
-elif [ -d "/lib/arm-linux-gnueabihf/" ];then \
-    export LINUX_GNU="arm-linux-gnueabihf"; \
-else  \
-    export LINUX_GNU="x86_64-linux-gnu"; \
-fi; \
-cp -a --parents /usr/sbin/privoxy /opt && \
-cp -a --parents /etc/privoxy /opt && \
+RUN cp -a --parents /etc/privoxy /opt && \
 cp -a --parents /usr/share/privoxy /opt && \
-cp -a --parents /usr/lib/$LINUX_GNU/libbrotlidec.so.* /opt && \
-cp -a --parents /usr/lib/$LINUX_GNU/libmbedtls.so.* /opt && \
-cp -a --parents /usr/lib/$LINUX_GNU/libmbedx509.so.* /opt && \
-cp -a --parents /usr/lib/$LINUX_GNU/libmbedcrypto.so.* /opt && \
-cp -a --parents /lib/$LINUX_GNU/libz.so.* /opt && \
-cp -a --parents /lib/$LINUX_GNU/libpcre.so.* /opt && \
-cp -a --parents /usr/lib/$LINUX_GNU/libpcreposix.so.* /opt && \
-cp -a --parents /usr/lib/$LINUX_GNU/libbrotlicommon.so.* /opt && \
-echo "nobody:x:65534:65534:Nobody:/:" > /opt/etc/passwd
+echo "nobody:x:65534:65534:Nobody:/:" > /opt/etc/passwd &&\
+echo "nameserver 1.1.1.1" > /opt/etc/resolv.conf && \
+echo "nameserver 2606:4700:4700::1111" >> /opt/etc/resolv.conf && \
+chmod 644 /opt/etc/resolv.conf
 
-FROM gcr.io/distroless/base-debian11
 
+COPY --from=ghcr.io/ahmetozer/distroless-helper /bin/distroless-helper /bin/distroless-helper
+RUN distroless-helper /usr/sbin/privoxy /opt
+RUN setcap CAP_NET_BIND_SERVICE=+eip /opt/usr/sbin/privoxy
+
+FROM scratch
 COPY --from=build /opt /
 LABEL org.opencontainers.image.source="https://github.com/ahmetozer/containers"
 LABEL org.opencontainers.image.authors="Ahmet OZER"

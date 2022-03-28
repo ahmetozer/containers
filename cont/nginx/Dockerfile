@@ -5,42 +5,26 @@
 FROM nginx:1.20 as nginxbin
 
 ARG TIME_ZONE
-
-RUN apt update && apt install -y libcap2-bin
-RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/sbin/nginx
+RUN apt update && apt install -y libcap2-bin --no-install-recommends
+COPY --from=ghcr.io/ahmetozer/distroless-helper /bin/distroless-helper /bin/distroless-helper
+RUN distroless-helper /usr/sbin/nginx        /opt
+RUN setcap CAP_NET_BIND_SERVICE=+eip /opt/usr/sbin/nginx 
+RUN distroless-helper /usr/sbin/nginx-debug  /opt
+RUN distroless-helper $(whereis libnss_files.so.2| cut -d ' ' -f2)  /opt
 RUN mkdir -p /opt/var/cache/nginx && \
-if [ -d "/lib/aarch64-linux-gnu/" ]; then \
-    export LINUX_GNU="aarch64-linux-gnu" ; \
-elif [ -d "/lib/arm-linux-gnueabihf/" ];then \
-    export LINUX_GNU="arm-linux-gnueabihf"; \
-else  \
-    export LINUX_GNU="x86_64-linux-gnu"; \
-fi; \
 cp -a --parents /usr/lib/nginx /opt && \
 cp -a --parents /usr/share/nginx /opt && \
 cp -a --parents /var/log/nginx /opt && \
 cp -aL --parents /var/run /opt && \
-cp -a --parents /etc/nginx /opt && \
-cp -a --parents /etc/passwd /opt && \
+cp -aL --parents /etc/nginx /opt && \
+cp -aL --parents /etc/passwd /opt && \
 cp -a --parents /etc/group /opt && \
-cp -a --parents /usr/sbin/nginx /opt && \
-cp -a --parents /usr/sbin/nginx-debug /opt && \
-cp -a --parents /lib/$LINUX_GNU/ld-* /opt && \
-cp -a --parents /lib/$LINUX_GNU/libpcre.so.* /opt && \
-cp -a --parents /lib/$LINUX_GNU/libz.so.* /opt && \
-cp -a --parents /lib/$LINUX_GNU/libc* /opt && \
-cp -a --parents /lib/$LINUX_GNU/libdl* /opt && \
-cp -a --parents /lib/$LINUX_GNU/libpthread* /opt && \
-cp -a --parents /lib/$LINUX_GNU/libcrypt* /opt && \
-cp -a --parents /usr/lib/$LINUX_GNU/libssl.so.* /opt && \
-cp -a --parents /usr/lib/$LINUX_GNU/libcrypto.so.* /opt && \
+cp -aL --parents /etc/nsswitch.conf /opt && \
 cp /usr/share/zoneinfo/${TIME_ZONE:-ROC} /opt/etc/localtime && \
 mkdir -p /opt/var/cache/nginx && chown -R nginx:nginx /opt/var/cache/nginx && \
 chown -R nginx:nginx /opt/var/run && chown -R nginx:nginx /opt/var/log/nginx
 
-
-FROM gcr.io/distroless/base-debian11
-
+FROM scratch
 COPY --from=nginxbin /opt /
 LABEL org.opencontainers.image.source="https://github.com/ahmetozer/containers"
 LABEL org.opencontainers.image.authors="Ahmet OZER"
