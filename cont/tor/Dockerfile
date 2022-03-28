@@ -12,7 +12,7 @@ mkdir -p /opt/home/nobody && chown -R nobody /opt/home/nobody && \
 echo "nobody:x:65534:65534:Nobody:/home/nobody:" > /opt/etc/passwd
 
 COPY --from=ghcr.io/ahmetozer/distroless-helper /bin/distroless-helper /bin/distroless-helper
-RUN distroless-helper /usr/bin/tor /opt
+RUN /bin/distroless-helper /usr/bin/tor /opt
 
 FROM scratch
 COPY --from=build /opt /

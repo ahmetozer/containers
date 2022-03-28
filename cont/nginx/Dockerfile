@@ -7,10 +7,10 @@ FROM nginx:1.20 as nginxbin
 ARG TIME_ZONE
 RUN apt update && apt install -y libcap2-bin --no-install-recommends
 COPY --from=ghcr.io/ahmetozer/distroless-helper /bin/distroless-helper /bin/distroless-helper
-RUN distroless-helper /usr/sbin/nginx        /opt
+RUN /bin/distroless-helper /usr/sbin/nginx        /opt
 RUN setcap CAP_NET_BIND_SERVICE=+eip /opt/usr/sbin/nginx 
-RUN distroless-helper /usr/sbin/nginx-debug  /opt
-RUN distroless-helper $(whereis libnss_files.so.2| cut -d ' ' -f2)  /opt
+RUN /bin/distroless-helper /usr/sbin/nginx-debug  /opt
+RUN /bin/distroless-helper $(whereis libnss_files.so.2| cut -d ' ' -f2)  /opt
 RUN mkdir -p /opt/var/cache/nginx && \
 cp -a --parents /usr/lib/nginx /opt && \
 cp -a --parents /usr/share/nginx /opt && \

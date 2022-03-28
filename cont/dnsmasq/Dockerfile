@@ -13,9 +13,9 @@ chmod 644 /opt/etc/resolv.conf
 
 
 COPY --from=ghcr.io/ahmetozer/distroless-helper /bin/distroless-helper /bin/distroless-helper
-RUN distroless-helper /usr/sbin/dnsmasq /opt
+RUN /bin/distroless-helper /usr/sbin/dnsmasq /opt
 RUN setcap CAP_NET_BIND_SERVICE=+eip /opt/usr/sbin/dnsmasq
-RUN distroless-helper $(whereis libnss_files.so.2| cut -d ' ' -f2)  /opt
+RUN /bin/distroless-helper $(whereis libnss_files.so.2| cut -d ' ' -f2)  /opt
 
 
 FROM scratch

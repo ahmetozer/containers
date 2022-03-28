@@ -2,7 +2,7 @@ FROM debian as upxbase
 RUN apt update && apt install upx --no-install-recommends -y
 
 COPY --from=ghcr.io/ahmetozer/distroless-helper /bin/distroless-helper /bin/distroless-helper
-RUN distroless-helper /usr/bin/upx /opt
+RUN /bin/distroless-helper /usr/bin/upx /opt
 
 FROM busybox:glibc
 COPY --from=upxbase /opt /

@@ -8,7 +8,7 @@ apt install speedtest -y  --no-install-recommends &&\
 apt autoclean &&\
 find /var/lib/apt/lists/ -maxdepth 1 -type f -print0 | xargs -0 rm
 COPY --from=ghcr.io/ahmetozer/distroless-helper /bin/distroless-helper /bin/distroless-helper
-RUN distroless-helper /usr/bin/speedtest        /opt
+RUN /bin/distroless-helper /usr/bin/speedtest        /opt
 RUN cp -a --parents /etc/ssl/ /opt
 
 FROM scratch

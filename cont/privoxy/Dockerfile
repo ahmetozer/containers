@@ -9,7 +9,7 @@ chmod 644 /opt/etc/resolv.conf
 
 
 COPY --from=ghcr.io/ahmetozer/distroless-helper /bin/distroless-helper /bin/distroless-helper
-RUN distroless-helper /usr/sbin/privoxy /opt
+RUN /bin/distroless-helper /usr/sbin/privoxy /opt
 RUN setcap CAP_NET_BIND_SERVICE=+eip /opt/usr/sbin/privoxy
 
 FROM scratch
