@@ -1,5 +1,10 @@
 FROM php:fpm as phpfpmbin
-RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
+RUN docker-php-ext-install mysqli && \
+docker-php-ext-install pdo && \
+docker-php-ext-install pdo_mysql && \
+docker-php-ext-enable mysqli  && \
+docker-php-ext-enable pdo  && \
+docker-php-ext-enable pdo_mysql
 RUN apt update && apt install -y libcap2-bin msmtp
 RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/local/sbin/php-fpm
 RUN mkdir -p /opt/var/cache/nginx && \
